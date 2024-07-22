@@ -1,0 +1,12 @@
+{
+  "name": "productmanager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "productManager.js",
+  "scripts": {
+    "start": "nodemon productManager.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
