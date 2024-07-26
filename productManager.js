@@ -1,37 +1,35 @@
-const { error } = require("console");
-const fs = require (`fs`)
+const fs = require('fs').promises; 
 
-class ProductManager  {
-
-    constructor(path){
-        this.path = path
-        this.products = []
-        this.loadProducts()
+class ProductManager {
+    constructor(path) {
+        this.path = path;
+        this.products = [];
+        this.loadProducts();
     }
 
-    loadProducts(){
-
+    async loadProducts() {
         try {
-            if(fs.existsSync(this.path)){
-            const data = fs.readFileSync(this.path,`utf-8`);
-            this.products = JSON.parse(data);
-
-            }else{
-                this.saveProducts();
+            if (await fs.access(this.path).then(() => true).catch(() => false)) {
+                const data = await fs.readFile(this.path, 'utf-8');
+                this.products = JSON.parse(data);
+            } else {
+                await this.saveProducts();
             }
-        
         } catch (error) {
-            console.error("Error al cargar los productos", error)
-            this.products = []
+            console.error("Error al cargar los productos", error);
+            this.products = [];
         }
     }
 
-    saveProducts(){
-        fs.writeFileSync(this.path, JSON.stringify(this.products, null, 2))
-
+    async saveProducts() {
+        try {
+            await fs.writeFile(this.path, JSON.stringify(this.products, null, 2));
+        } catch (error) {
+            console.error("Error al guardar los productos", error);
+        }
     }
 
-    addProduct(product){
+    async addProduct(product) {
         try {
             const newProduct = {
                 id: this.products.length ? this.products[this.products.length - 1].id + 1 : 1,
@@ -41,61 +39,45 @@ class ProductManager  {
                 thumbnail: product.thumbnail,
                 code: product.code,
                 stock: product.stock
-            }
-    
-            this.products.push(newProduct);
-    
-            this.saveProducts();
-    
-            console.log(`Producto agregado con exito`, newProduct)
-        } catch (error) {
-            console.error(`Error al agregar producto`, error)
-            
-        }
+            };
 
+            this.products.push(newProduct);
+            await this.saveProducts();
+
+            console.log(`Producto agregado con éxito`, newProduct);
+        } catch (error) {
+            console.error(`Error al agregar producto`, error);
+        }
     }
 
-    getProducts(){
+    async getProducts() {
         return this.products;
     }
 
-    getProductsByID(id){
-            const product = this.products.find(product => product.id === id)
-
-            !product && console.error("Producto no encontrado", error)
-
-            return product
+    async getProductsByID(id) {
+        return this.products.find(product => product.id === id);
     }
 
-    updateProduct(id, updateFields){
+    async updateProduct(id, updateFields) {
         const productIndex = this.products.findIndex(product => product.id === id);
+        if (productIndex === -1) return;
 
-        productIndex=== -1 && console.log("no se encuentra el producto",error);
-
-        const product = this.products [productIndex]
-
-        this.products[productIndex] = { ...product, ...updateFields, id: product.id}
-
-        this.saveProducts();
+        const product = this.products[productIndex];
+        this.products[productIndex] = { ...product, ...updateFields, id: product.id };
+        await this.saveProducts();
     }
 
-    deleteProduct(id){
+    async deleteProduct(id) {
+        const productIndex = this.products.findIndex(product => product.id === id);
+        if (productIndex === -1) return;
 
-        const productIndex = this.products.findIndex(product =>product.id === id);
-
-        productIndex=== -1 && console.log("no se encuentra el producto",error);
-
-        this.products.splice(productIndex,1);
-
-        this.saveProducts();
-
-
+        this.products.splice(productIndex, 1);
+        await this.saveProducts();
     }
+}
 
-    }
+module.exports = ProductManager;
 
-
-    module.exports = ProductManager;
 
 /*     // Ejemplo de uso
 const manager = new ProductManager('products.json');
