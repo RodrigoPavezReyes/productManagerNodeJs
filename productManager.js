@@ -95,36 +95,38 @@ class ProductManager  {
     }
 
 
-    // Ejemplo de uso
+    module.exports = ProductManager;
+
+/*     // Ejemplo de uso
 const manager = new ProductManager('products.json');
 
-// Imprimir los productos actuales (vacío al inicio)
-console.log(manager.getProducts()); 
+ // Imprimir los productos actuales (vacío al inicio)
+console.log(manager.getProducts());  
 
 // Agregar un nuevo producto
 manager.addProduct({
-    title: "producto prueba",
-    description: "Este es un producto prueba",
-    price: 200,
+    title: "Notebook",
+    description: "Apple",
+    price: 1700,
     thumbnail: "Sin imagen",
-    code: "abc123",
-    stock: 25
+    code: "a5",
+    stock: 8
 });
 
 
-// Imprimir los productos después de agregar uno (debería mostrar el producto agregado)
+//Imprimir los productos después de agregar uno (debería mostrar el producto agregado)
 console.log(manager.getProducts())
 
 
-// Obtener un producto por su ID
+Obtener un producto por su ID
 const product = manager.getProductsByID(1);
 console.log(product)
 
 
-// Actualizar el producto
+Actualizar el producto
 manager.updateProduct(1, { price: 250 });
 console.log(manager.getProductsByID(1))
 
-// Eliminar el producto
+Eliminar el producto
 manager.deleteProduct(1);
-console.log(manager.getProducts())
+console.log(manager.getProducts())   */
